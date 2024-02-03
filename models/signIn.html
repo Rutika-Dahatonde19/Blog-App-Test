@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .button1 {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .button2 {
+            background-color: #580ee0;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .button1:hover {
+            background-color: #45a049;
+        }
+        .button2:hover {
+            background-color: #e05708;
+        }
+
+        .error {
+            color: red;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <form id="loginForm" action="http://localhost:2000/apis/login" method="post">
+        <h2>User Login</h2>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required minlength="3" maxlength="20">
+        
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required minlength="3" maxlength="10">
+
+        <button class="button1" type="submit">Login</button>
+        <button class="button2" type="button" onclick="location.href='signUp.html'">Register Here</button>
+    </form>
+
+    <script>
+     
+    document.getElementById('loginForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const formData = new FormData(this);
+    const data = {};
+    
+    // Convert FormData to a plain object
+    formData.forEach((value, key) => {
+        data[key] = value;
+    });
+
+    try {
+        const response = await fetch('http://localhost:2000/apis/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // Set content type to JSON
+            },
+            body: JSON.stringify(data), // Convert data to JSON string
+        });
+
+        if (response.status === 200) {
+            const result = await response.json();
+            if (result.success) {
+                window.location.href = 'home.html';
+            } else {
+                alert('Login failed. Please check your credentials.');
+            }
+        } else if (response.status === 401) {
+            alert('Incorrect username or password.');
+        } else {
+            alert('Error during login. Please try again.');
+        }
+    } catch (err) {
+        console.error("Internal server error", err);
+        alert('An internal server error occurred. Please try again later.');
+    }
+});
+
+    </script>
+
+</body>
+</html>
+

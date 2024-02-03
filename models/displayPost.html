@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Posts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .post {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        img {
+            max-width: 100%;
+            border-radius: 4px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="postsContainer"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            try {
+                const response = await fetch('http://localhost:2000/apis/posts');
+                const result = await response.json();
+
+                if (response.ok) {
+                    const postsContainer = document.getElementById('postsContainer');
+
+                    result.data.forEach(post => {
+                        const postDiv = document.createElement('div');
+                        postDiv.classList.add('post');
+
+                        const title = document.createElement('h2');
+                        title.textContent = post.title;
+
+                        const image = document.createElement('img');
+                        image.src = post.image;
+                        image.alt = 'Post Image';
+
+                        const comments = document.createElement('p');
+                        comments.textContent = post.comments;
+
+                        postDiv.appendChild(title);
+                        postDiv.appendChild(image);
+                        postDiv.appendChild(comments);
+                
+
+                        postsContainer.appendChild(postDiv);
+                    });
+                } else {
+                    console.error('Error fetching posts:', result);
+                }
+            } catch (err) {
+                console.error('An error occurred:', err);
+            }
+        });
+    </script>
+
+</body>
+</html>
